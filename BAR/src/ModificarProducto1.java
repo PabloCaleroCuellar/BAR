@@ -1,5 +1,3 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.Font;
 
 import javax.swing.DefaultComboBoxModel;
@@ -11,110 +9,152 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import Modelo.ConectarBBDD;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTable;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import java.awt.SystemColor;
 
 public class ModificarProducto1 extends JFrame {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
+	private JTextField NombreNuevo;
+	private JTextField PrecioNuevo;
+	private static String nombre;
+	static int categoria;
+	private JTable table;
+	private ConectarBBDD Prueba;
+	private JTable PrecioActual;
+	String nombre1;
+	Object precio;
+	int categoria1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ModificarProducto1 frame = new ModificarProducto1();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public ModificarProducto1() {
+	public ModificarProducto1(String nombre, int categoria) {
+		Prueba = new ConectarBBDD();
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.inactiveCaption);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		table = new JTable();
+		table.setBounds(81, 46, 109, 14);
+		table.setBackground(Color.WHITE);
+		table.setBorder(new LineBorder(new Color(0, 0, 0)));
+		table.setModel(Prueba.CogerNombre(nombre));
+		contentPane.add(table);
 		
-		JLabel lblNombreDelProducto = new JLabel("Nombre actual");
+		PrecioActual = new JTable();
+		PrecioActual.setBounds(81, 140, 109, 14);
+		PrecioActual.setBorder(new LineBorder(new Color(0, 0, 0)));
+		PrecioActual.setBackground(Color.WHITE);
+		PrecioActual.setModel(Prueba.CogerPrecio(nombre));
+		contentPane.add(PrecioActual);
+		
+		JLabel lblNombreDelProducto = new JLabel("Nombre");
+		lblNombreDelProducto.setForeground(Color.WHITE);
+		lblNombreDelProducto.setFont(new Font("Ebrima", Font.BOLD, 13));
 		lblNombreDelProducto.setBounds(10, 46, 121, 14);
 		getContentPane().add(lblNombreDelProducto);
 		
-		JLabel lblCategoraDelProducto = new JLabel("Categor\u00EDa actual");
+		JLabel lblCategoraDelProducto = new JLabel("Categor\u00EDa");
+		lblCategoraDelProducto.setForeground(Color.WHITE);
+		lblCategoraDelProducto.setFont(new Font("Ebrima", Font.BOLD, 13));
 		lblCategoraDelProducto.setBounds(10, 91, 137, 14);
 		getContentPane().add(lblCategoraDelProducto);
 		
-		JLabel lblPrecioDelProducto = new JLabel("Precio actual");
+		JLabel lblPrecioDelProducto = new JLabel("Precio");
+		lblPrecioDelProducto.setFont(new Font("Ebrima", Font.BOLD, 13));
+		lblPrecioDelProducto.setForeground(Color.WHITE);
 		lblPrecioDelProducto.setBounds(10, 140, 121, 14);
 		getContentPane().add(lblPrecioDelProducto);
 		
-		textField = new JTextField();
-		textField.setEnabled(false);
-		textField.setBounds(287, 43, 137, 20);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		NombreNuevo = new JTextField();
+		NombreNuevo.setBounds(287, 43, 137, 20);
+		NombreNuevo.setEnabled(false);
+		getContentPane().add(NombreNuevo);
+		NombreNuevo.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setEnabled(false);
-		textField_2.setBounds(287, 137, 137, 20);
-		getContentPane().add(textField_2);
-		textField_2.setColumns(10);
-		
-		JButton btnAadirProducto = new JButton("Modificar producto");
-		btnAadirProducto.setBounds(10, 191, 153, 45);
-		getContentPane().add(btnAadirProducto);
+		PrecioNuevo = new JTextField();
+		PrecioNuevo.setBounds(287, 137, 137, 20);
+		PrecioNuevo.setEnabled(false);
+		getContentPane().add(PrecioNuevo);
+		PrecioNuevo.setColumns(10);
 		
 		JLabel lblIntroduzcaLosDatos = new JLabel("Introduzca los datos del producto que vamos a modificar");
-		lblIntroduzcaLosDatos.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblIntroduzcaLosDatos.setForeground(Color.WHITE);
 		lblIntroduzcaLosDatos.setBounds(36, 13, 375, 14);
+		lblIntroduzcaLosDatos.setFont(new Font("Ebrima", Font.BOLD, 13));
 		getContentPane().add(lblIntroduzcaLosDatos);
 		
 		JButton btnNewButton = new JButton("Borrar datos");
-		btnNewButton.setBounds(173, 191, 109, 45);
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				NombreNuevo.setText("");
+				PrecioNuevo.setText("");
+			}
+		});
+		btnNewButton.setBackground(new Color(204, 255, 0));
+		btnNewButton.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnNewButton.setBounds(184, 191, 121, 45);
 		getContentPane().add(btnNewButton);
 		
-		JButton btnNewButton_1 = new JButton("Administraci\u00F3n");
-		btnNewButton_1.setBounds(287, 191, 125, 45);
+		JButton btnNewButton_1 = new JButton("Atr\u00E1s");
+		btnNewButton_1.setBackground(new Color(204, 255, 0));
+		btnNewButton_1.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnNewButton_1.setBounds(327, 191, 85, 45);
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListaProductos1 ven = new ListaProductos1();
+				ven.setVisible(true);
+				dispose();
+			}
+		});
 		getContentPane().add(btnNewButton_1);
 		
 		JComboBox comboBox = new JComboBox();
+		comboBox.setBounds(287, 88, 137, 20);
 		comboBox.setEnabled(false);
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Bebidas", "Comida", "Postres"}));
-		comboBox.setBounds(287, 88, 137, 20);
 		getContentPane().add(comboBox);
 		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Cambiar");
-		chckbxNewCheckBox.addActionListener(new ActionListener() {
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setEnabled(false);
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Bebidas", "Comidas", "Postres"}));
+		comboBox_1.setBounds(81, 88, 109, 20);
+		comboBox_1.setSelectedIndex(categoria-1);
+		contentPane.add(comboBox_1);
+		
+		JCheckBox checkNombre = new JCheckBox("Cambiar");
+		checkNombre.setForeground(Color.WHITE);
+		checkNombre.setFont(new Font("Ebrima", Font.BOLD, 13));
+		checkNombre.setBackground(SystemColor.inactiveCaption);
+		checkNombre.setBounds(196, 42, 85, 23);
+		checkNombre.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(chckbxNewCheckBox.isSelected()) {
-					textField.setEnabled(true);
+				if(checkNombre.isSelected()) {
+					NombreNuevo.setEnabled(true);
 				}
 				else {
-					textField.setEnabled(false);
+					NombreNuevo.setEnabled(false);
 				}
 			}
 		});
-		chckbxNewCheckBox.setBounds(208, 42, 73, 23);
-		getContentPane().add(chckbxNewCheckBox);
+		getContentPane().add(checkNombre);
 		
-		JCheckBox checkBox = new JCheckBox("Cambiar");
-		checkBox.addActionListener(new ActionListener() {
+		JCheckBox checkCategoria = new JCheckBox("Cambiar");
+		checkCategoria.setFont(new Font("Ebrima", Font.BOLD, 13));
+		checkCategoria.setForeground(Color.WHITE);
+		checkCategoria.setBackground(SystemColor.inactiveCaption);
+		checkCategoria.setBounds(196, 87, 85, 23);
+		checkCategoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(checkBox.isSelected()) {
+				if(checkCategoria.isSelected()) {
 					comboBox.setEnabled(true);
 				}
 				else {
@@ -122,37 +162,70 @@ public class ModificarProducto1 extends JFrame {
 				}
 			}
 		});
-		checkBox.setBounds(208, 87, 73, 23);
-		getContentPane().add(checkBox);
+		getContentPane().add(checkCategoria);
 		
-		JCheckBox checkBox_1 = new JCheckBox("Cambiar");
-		checkBox_1.addActionListener(new ActionListener() {
+		JCheckBox checkPrecio = new JCheckBox("Cambiar");
+		checkPrecio.setFont(new Font("Ebrima", Font.BOLD, 13));
+		checkPrecio.setForeground(Color.WHITE);
+		checkPrecio.setBackground(SystemColor.inactiveCaption);
+		checkPrecio.setBounds(196, 136, 85, 23);
+		checkPrecio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(checkBox_1.isSelected()) {
-					textField_2.setEnabled(true);
+				if(checkPrecio.isSelected()) {
+					PrecioNuevo.setEnabled(true);
 				}
 				else {
-					textField_2.setEnabled(false);
+					PrecioNuevo.setEnabled(false);
 				}
 			}
 		});
-		checkBox_1.setBounds(208, 136, 73, 23);
-		getContentPane().add(checkBox_1);
+		getContentPane().add(checkPrecio);
 		
-		textField_3 = new JTextField();
-		textField_3.setBounds(99, 43, 103, 20);
-		getContentPane().add(textField_3);
-		textField_3.setColumns(10);
-		
-		textField_4 = new JTextField();
-		textField_4.setBounds(113, 88, 89, 20);
-		getContentPane().add(textField_4);
-		textField_4.setColumns(10);
-		
-		textField_5 = new JTextField();
-		textField_5.setBounds(99, 137, 103, 20);
-		getContentPane().add(textField_5);
-		textField_5.setColumns(10);
+		JButton btnAadirProducto = new JButton("Modificar producto");
+		btnAadirProducto.setBackground(new Color(204, 255, 0));
+		btnAadirProducto.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnAadirProducto.setBounds(10, 191, 153, 45);
+		btnAadirProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(Prueba.ConsultarExisteCategoria(comboBox.getSelectedIndex()+1) == true) {
+					Prueba.AñadirCategoria(comboBox.getSelectedIndex()+1);
+				}
+				
+				if(checkCategoria.isSelected()) {
+					categoria1 = comboBox.getSelectedIndex()+1;
+				}
+				else {
+					categoria1 = comboBox_1.getSelectedIndex()+1;
+				}
+				
+				if(checkPrecio.isSelected()) {
+					precio = Double.parseDouble(PrecioNuevo.getText());
+				}
+				else {
+					precio = PrecioActual.getValueAt(0, 0);
+				}
+
+				if(checkNombre.isSelected()) {
+					nombre1 = NombreNuevo.getText();
+				}
+				else {
+					nombre1 = (String) table.getValueAt(0, 0);
+				}
+				
+				Prueba.ModificarProducto(nombre1, precio, categoria1, nombre);
+				dispose();
+				ListaProductos1 ven = new ListaProductos1();
+				ven.setVisible(true);
+			}
+		});
+		getContentPane().add(btnAadirProducto);
 	}
 
+	public static String getNombre() {
+		return nombre;
+	}
+
+	public static void setNombre(String nombre) {
+		ModificarProducto1.nombre = nombre;
+	}
 }

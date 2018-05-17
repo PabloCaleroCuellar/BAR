@@ -6,7 +6,7 @@ public class Producto {
 	private int Categoria;
 	private int Cantidad;
 	private String Precio;
-	private int Id;
+	private static int Id;
 	
 	
 	public Producto(int id, String nombre, String precio2, int cantidad, int idcategoria) {
@@ -19,7 +19,7 @@ public class Producto {
 	}
 
 	
-	public int getId() {
+	public static int getId() {
 		return Id;
 	}
 

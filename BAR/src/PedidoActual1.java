@@ -1,79 +1,40 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
-
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import Modelo.ConectarBBDD;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
+import java.awt.Font;
 
 public class PedidoActual1 extends JFrame {
 
+
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
+	private ConectarBBDD Prueba;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PedidoActual1 frame = new PedidoActual1();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PedidoActual1() {
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
+		contentPane.setBackground(SystemColor.inactiveCaption);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
-		JButton btnAadirProducto = new JButton("A\u00F1adir producto");
-		btnAadirProducto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AñadirProductoPedido1 ven = new AñadirProductoPedido1();
-				ven.setVisible(true);
-			}
-		});
-		btnAadirProducto.setBounds(266, 49, 145, 85);
-		getContentPane().add(btnAadirProducto);
-		
-		JButton btnNewButton = new JButton("Finalizar pedido");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				FinalizarPedido1 ven = new FinalizarPedido1();
-				ven.setVisible(true);
-			}
-		});
-		btnNewButton.setBounds(266, 145, 145, 85);
-		getContentPane().add(btnNewButton);
-		
-		JLabel lblPedidoActual = new JLabel("N\u00FAmero de mesa");
-		lblPedidoActual.setBounds(34, 11, 118, 14);
-		getContentPane().add(lblPedidoActual);
-		
-		JButton btnVolverAPedidos = new JButton("Volver a pedidos");
-		btnVolverAPedidos.setBounds(34, 214, 129, 23);
-		getContentPane().add(btnVolverAPedidos);
 		
 		table = new JTable();
 		table.setBorder(new LineBorder(new Color(0, 0, 0)));
@@ -94,21 +55,82 @@ public class PedidoActual1 extends JFrame {
 		));
 		table.getColumnModel().getColumn(0).setPreferredWidth(110);
 		table.getColumnModel().getColumn(1).setPreferredWidth(40);
-		table.setBounds(34, 70, 201, 133);
-		getContentPane().add(table);
+		table.setBounds(34, 70, 222, 133);		
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "L", "3"}));
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Prueba = new ConectarBBDD();
+				table.setModel(Prueba.ConsultarProductosMesa(comboBox.getSelectedIndex()+1));
+				table.getColumnModel().getColumn(0).setPreferredWidth(110);
+				table.getColumnModel().getColumn(1).setPreferredWidth(30);
+				table.getColumnModel().getColumn(2).setPreferredWidth(50);
+			}
+		});
+		
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3"}));
+		comboBox.setSelectedIndex(0);
 		comboBox.setBounds(162, 8, 179, 20);
 		getContentPane().add(comboBox);
 		
-		JLabel lblProducto = new JLabel("Producto");
-		lblProducto.setBounds(78, 49, 62, 14);
-		getContentPane().add(lblProducto);
+		JButton btnAadirProducto = new JButton("Modificar Pedido");
+		btnAadirProducto.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnAadirProducto.setBackground(new Color(204, 255, 0));
+		btnAadirProducto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(Prueba.ConsultarExisteMesa(comboBox.getSelectedIndex()+1) == true) {
+					Prueba.AñadirMesa(comboBox.getSelectedIndex()+1);
+				}
+				if(Prueba.ConsultarContieneProductos(comboBox.getSelectedIndex()+1) == true) {
+					Prueba.AñadirNuevoPedido(Prueba.GeneradorIdPedido(), comboBox.getSelectedIndex()+1);
+				}
+				AñadirProductoPedido1 ven = new AñadirProductoPedido1(comboBox.getSelectedIndex()+1);
+				ven.setVisible(true);
+				dispose();
+			}
+		});
+		btnAadirProducto.setBounds(266, 49, 145, 85);
+		getContentPane().add(btnAadirProducto);
 		
-		JLabel lblCantidad = new JLabel("Cantidad");
-		lblCantidad.setBounds(172, 49, 77, 14);
-		getContentPane().add(lblCantidad);
+		JButton btnNewButton = new JButton("Finalizar pedido");
+		btnNewButton.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnNewButton.setBackground(new Color(204, 255, 0));
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ConectarBBDD Prueba = new ConectarBBDD();
+				Prueba.Total(comboBox.getSelectedIndex()+1);
+				FinalizarPedido1 ven = new FinalizarPedido1(comboBox.getSelectedIndex()+1);
+				ven.setVisible(true);
+				dispose();
+			}
+		});
+		btnNewButton.setBounds(266, 145, 145, 85);
+		getContentPane().add(btnNewButton);
+		
+		JLabel lblPedidoActual = new JLabel("N\u00FAmero de mesa");
+		lblPedidoActual.setForeground(Color.WHITE);
+		lblPedidoActual.setFont(new Font("Ebrima", Font.BOLD, 13));
+		lblPedidoActual.setBounds(34, 11, 118, 14);
+		getContentPane().add(lblPedidoActual);
+		
+		JButton btnVolverAPedidos = new JButton("Volver a pedidos");
+		btnVolverAPedidos.setBackground(new Color(204, 255, 0));
+		btnVolverAPedidos.setFont(new Font("Ebrima", Font.BOLD, 13));
+		btnVolverAPedidos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Pedidos1 ven = new Pedidos1();
+				ven.setVisible(true);
+				dispose();
+			}
+		});
+		btnVolverAPedidos.setBounds(21, 214, 145, 36);
+		getContentPane().add(btnVolverAPedidos);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(21, 49, 225, 154);
+		contentPane.add(scrollPane);
+		
+		scrollPane.setViewportView(table);
 	}
 
 }
